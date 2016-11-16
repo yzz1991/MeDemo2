@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/rl_title"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="#6495ED"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+        <TextView
+            android:id="@+id/group_back"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:drawableLeft="@drawable/left_back"
+            android:paddingLeft="10dp"/>
+        <TextView
+            android:id="@+id/tv_groupName"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="yzz"
+            android:textColor="#fff"
+            android:textSize="17dp"
+            android:gravity="center"/>
+        <TextView
+            android:id="@+id/addGroup"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="加人"
+            android:textColor="#fff"
+            android:textSize="14sp"
+            android:layout_marginRight="10dp"/>
+    </LinearLayout>
+
+    <GridView
+        android:id="@+id/groupGv"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:numColumns="5"></GridView>
+
+    <TextView
+        android:id="@+id/clearAll"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="清空聊天记录"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"/>
+    <TextView
+        android:id="@+id/changeGroupName"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="修改群名称"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"/>
+    <TextView
+        android:id="@+id/blockNameList"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:text="黑名单列表"
+        android:gravity="center_vertical"
+        android:paddingLeft="10dp"/>
+
+    <LinearLayout
+        android:id="@+id/blockGroupMessage_ll"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:layout_weight="1"
+            android:text="屏蔽群消息"
+            android:gravity="center_vertical"
+            android:paddingLeft="10dp"/>
+        <Switch
+            android:id="@+id/blockGroupMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"/>
+    </LinearLayout>
+    <Button
+        android:id="@+id/bt_destroyGroup"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:text="解散群组"
+        android:background="#6495ED"
+        android:layout_marginBottom="5dp"/>
+
+
+</LinearLayout>

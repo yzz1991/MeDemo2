@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:background="#fff"
+    tools:context="com.geri.app.demo.ui.LoginActivity">
+
+    <EditText
+        android:id="@+id/ed_userName"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:hint="请输入用户名"
+        android:background="@drawable/login_ed_bg"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <EditText
+        android:id="@+id/ed_pwd"
+        android:layout_width="280dp"
+        android:layout_height="40dp"
+        android:hint="请输入密码"
+        android:inputType="textPassword"
+        android:background="@drawable/login_ed_bg"
+        android:layout_marginTop="12dp"
+        android:layout_below="@+id/ed_userName"
+        android:layout_alignLeft="@+id/ed_userName"
+        android:layout_alignStart="@+id/ed_userName" />
+
+    <LinearLayout
+        android:layout_width="280dp"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal"
+        android:layout_below="@+id/ed_pwd"
+        android:layout_alignLeft="@+id/ed_pwd"
+        android:layout_alignStart="@+id/ed_pwd">
+
+        <Button
+            android:id="@+id/bt_login"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="登录"
+            android:textColor="#fff"
+            android:background="#6495ED"
+            android:layout_marginTop="10dp" />
+        <View
+            android:layout_width="40dp"
+            android:layout_height="1dp"/>
+        <Button
+            android:id="@+id/bt_register"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:text="注册"
+            android:textColor="#fff"
+            android:background="#6495ED"
+            android:layout_marginTop="10dp" />
+    </LinearLayout>
+
+
+</RelativeLayout>

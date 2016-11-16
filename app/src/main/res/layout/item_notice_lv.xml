@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:orientation="horizontal"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp">
+        <ImageView
+            android:id="@+id/head_img"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/title" />
+        <LinearLayout
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:orientation="vertical"
+            android:layout_marginLeft="10dp">
+            <TextView
+                android:id="@+id/tv_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="小昵"
+                android:textSize="15sp"
+                android:textColor="#000"/>
+            <TextView
+                android:id="@+id/tv_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="么么哒"
+                android:textColor="#666666"
+                android:layout_marginTop="5dp"/>
+        </LinearLayout>
+        <Button
+            android:id="@+id/agree"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:text="同意"
+            android:layout_marginRight="10dp"/>
+        <Button
+            android:id="@+id/refuse"
+            android:layout_width="70dp"
+            android:layout_height="40dp"
+            android:text="拒绝"
+            android:layout_marginRight="10dp"/>
+    </LinearLayout>
+</LinearLayout>
