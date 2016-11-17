@@ -114,7 +114,7 @@ public class MyHyphenate {
         // 设置是否根据服务器时间排序，默认是true
         options.setSortMessageByServerTime(false);
         // 收到好友申请是否自动同意，如果是自动同意就不会收到好友请求的回调，因为sdk会自动处理，默认为true
-        options.setAcceptInvitationAlways(false);
+        options.setAcceptInvitationAlways(true);
         // 设置是否自动接收加群邀请，如果设置了当收到群邀请会自动同意加入
         options.setAutoAcceptGroupInvitation(false);
         // 设置（主动或被动）退出群组时，是否删除群聊聊天记录
@@ -234,7 +234,7 @@ public class MyHyphenate {
         mContactListener = new EMContactListener() {
             @Override
             public void onContactAdded(String s) {
-//                Toast.makeText(mContext, "新增了联系人", Toast.LENGTH_SHORT).show();
+                EventBus.getDefault().post("联系人改变");
             }
 
             @Override

@@ -206,14 +206,10 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 Intent intent = new Intent(ChatActivity.this, MapShowActivity.class);
                 startActivityForResult(intent, MLConstants.ML_REQUEST_CODE_LOCATION);
                 break;
-
-//            case R.id.call:
-//
-//                break;
             //退回会话页面
             case R.id.chat_back:
-                Intent intent2 = new Intent(ChatActivity.this, ConversationActivity.class);
-                startActivity(intent2);
+//                Intent intent2 = new Intent(ChatActivity.this, ConversationActivity.class);
+//                startActivity(intent2);
                 finish();
                 break;
 

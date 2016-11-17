@@ -29,15 +29,16 @@ public class GroupListActivity extends AppCompatActivity{
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_conversation);
+        setContentView(R.layout.activity_group_list);
         initView();
     }
 
     private void initView() {
-        TextView conversation_back = (TextView) findViewById(R.id.conversation_back);
-        TextView title = (TextView) findViewById(R.id.title);
+        TextView chat_back = (TextView) findViewById(R.id.chat_back);
+        chat_back.setVisibility(View.VISIBLE);
+        TextView title = (TextView) findViewById(R.id.tv_title);
         title.setText("群组列表");
-        ListView lv = (ListView) findViewById(R.id.conversation_lv);
+        ListView lv = (ListView) findViewById(R.id.group_lv);
         getGroupList();
         //设置适配器
         lv.setAdapter(new GroupUserListAdapter());
@@ -52,7 +53,7 @@ public class GroupListActivity extends AppCompatActivity{
                 finish();
             }
         });
-        conversation_back.setOnClickListener(new View.OnClickListener() {
+        chat_back.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(GroupListActivity.this,MainActivity.class));
@@ -89,11 +90,10 @@ public class GroupListActivity extends AppCompatActivity{
         public View getView(int position, View convertView, ViewGroup parent) {
             LayoutInflater mInflater = LayoutInflater.from(GroupListActivity.this);
             if(convertView == null){
-                convertView = mInflater.inflate(R.layout.item_conversation,null);
+                convertView = mInflater.inflate(R.layout.item_contacts,null);
             }
-            TextView tv_username = (TextView) convertView.findViewById(R.id.tv_username);
-            TextView tv_content = (TextView) convertView.findViewById(R.id.tv_content);
-            tv_username.setText(grouplist.get(position).getGroupName());
+            TextView tv_nickName = (TextView) convertView.findViewById(R.id.tv_nickName);
+            tv_nickName.setText(grouplist.get(position).getGroupName());
             return convertView;
         }
     }

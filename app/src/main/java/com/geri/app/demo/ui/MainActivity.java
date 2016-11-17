@@ -4,11 +4,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -20,10 +20,13 @@ import com.geri.app.demo.fragment.SettingFragment;
 import com.geri.app.ui.R;
 import com.hyphenate.chat.EMClient;
 
+import java.util.ArrayList;
+import java.util.List;
+
 /**
  * Created by Geri on 2016/10/18.
  */
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends FragmentActivity {
 
     private EditText edUserName;
     private String chatId;
@@ -37,6 +40,7 @@ public class MainActivity extends AppCompatActivity  {
     private RadioButton rbConversation;
     private RadioButton rbContacts;
     private RadioButton rbSetting;
+    private List<String> tagList = new ArrayList<String>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -138,9 +142,11 @@ public class MainActivity extends AppCompatActivity  {
     }
 
     class HomeViewPagerAdapter extends FragmentPagerAdapter{
+        FragmentManager mFragmentManager;
 
         public HomeViewPagerAdapter(FragmentManager fm) {
             super(fm);
+            this.mFragmentManager = fm;
         }
 
         @Override
@@ -166,6 +172,34 @@ public class MainActivity extends AppCompatActivity  {
         public int getCount() {
             return 3;
         }
+
+//        @Override
+//        public Object instantiateItem(ViewGroup container, int position) {
+//            tagList.add(makeFragmentName(container.getId(), getItemId(position))); //把tag存起来
+//            return super.instantiateItem(container, position);
+//        }
+//
+//        @Override
+//        public void destroyItem(ViewGroup container, int position, Object object){
+//            super.destroyItem(container, position, object);
+//            tagList.remove(makeFragmentName(container.getId(), getItemId(position)));//把tag删掉
+//        }
+//
+//        public void update(){
+//            notifyDataSetChanged();//并不能起到更新Fragment内容的作用。
+//        }
+//
+//        public void update(int position){//这个事真正的更新Fragment的内容
+//            Fragment fragment = mFragmentManager.findFragmentByTag(tagList.get(position));
+//            if(fragment == null){
+//                return;
+//            }
+//        }
+//
+//        public String makeFragmentName(int viewId, long id) {
+//            return "android:switcher:" + viewId + ":" + id;
+//        }
+
     }
 
 //    @Override
