@@ -1,7 +1,9 @@
-package com.geri.app.demo;
+package com.geri.app.demo.utils;
 
 import android.media.MediaRecorder;
 import android.util.Log;
+
+import com.geri.app.demo.application.MeApplication;
 
 import java.io.File;
 import java.io.IOException;

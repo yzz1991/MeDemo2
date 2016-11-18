@@ -7,7 +7,7 @@ import android.view.View;
 import android.widget.Chronometer;
 import android.widget.TextView;
 
-import com.geri.app.demo.MLConstants;
+import com.geri.app.demo.utils.MLConstants;
 import com.geri.app.ui.R;
 import com.hyphenate.chat.EMCallStateChangeListener;
 import com.hyphenate.chat.EMClient;

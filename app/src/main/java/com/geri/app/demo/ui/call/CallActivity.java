@@ -6,7 +6,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.WindowManager;
 import android.widget.Chronometer;
 
-import com.geri.app.demo.MLConstants;
+import com.geri.app.demo.utils.MLConstants;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMMessage;
 import com.hyphenate.chat.EMTextMessageBody;

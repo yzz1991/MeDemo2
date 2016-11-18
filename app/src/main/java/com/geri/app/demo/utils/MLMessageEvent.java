@@ -1,4 +1,4 @@
-package com.geri.app.demo;
+package com.geri.app.demo.utils;
 
 import com.hyphenate.chat.EMMessage;
 

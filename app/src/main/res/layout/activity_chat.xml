@@ -33,17 +33,13 @@
             android:gravity="center"
             android:src="@drawable/user_details"
             android:textColor="#fff"/>
-        <!--<TextView-->
-            <!--android:id="@+id/addBlock"-->
-            <!--android:layout_width="wrap_content"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:text="加入黑名单"/>-->
-        <!--<TextView-->
-            <!--android:id="@+id/deleteBlock"-->
-            <!--android:layout_width="50dp"-->
-            <!--android:layout_height="wrap_content"-->
-            <!--android:gravity="center"-->
-            <!--android:text="移除"/>-->
+        <TextView
+            android:id="@+id/tv_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableRight="@drawable/more"
+            android:paddingRight="10dp"
+            android:visibility="gone"/>
     </LinearLayout>
     <!--展示消息内容-->
     <ListView

@@ -1,4 +1,4 @@
-package com.geri.app.demo;
+package com.geri.app.demo.application;
 
 import android.app.ActivityManager;
 import android.content.Context;
@@ -7,6 +7,9 @@ import android.content.pm.PackageManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 
+import com.geri.app.demo.utils.CallReceiver;
+import com.geri.app.demo.utils.MLMessageEvent;
+import com.geri.app.demo.utils.MLNotifier;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMConnectionListener;
 import com.hyphenate.EMContactListener;

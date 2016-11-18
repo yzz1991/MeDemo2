@@ -8,7 +8,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.TextView;
 
-import com.geri.app.demo.MLCameraDataProcessor;
+import com.geri.app.demo.utils.MLCameraDataProcessor;
 import com.geri.app.ui.R;
 import com.hyphenate.chat.EMCallManager;
 import com.hyphenate.chat.EMCallStateChangeListener;

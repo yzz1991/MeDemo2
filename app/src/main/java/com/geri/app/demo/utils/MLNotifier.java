@@ -1,4 +1,4 @@
-package com.geri.app.demo;
+package com.geri.app.demo.utils;
 
 import android.app.Notification;
 import android.app.NotificationManager;
@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.NotificationCompat;
 
+import com.geri.app.demo.application.MeApplication;
 import com.geri.app.demo.ui.ChatActivity;
 import com.geri.app.demo.ui.MainActivity;
 import com.geri.app.ui.R;

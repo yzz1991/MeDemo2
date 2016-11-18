@@ -12,7 +12,7 @@
  * limitations under the License.
  */
 
-package com.geri.app.demo;
+package com.geri.app.demo.utils;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

@@ -24,11 +24,12 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.geri.app.demo.MLConstants;
-import com.geri.app.demo.MLNotifier;
-import com.geri.app.demo.MLRecorder;
-import com.geri.app.demo.MyHyphenate;
 import com.geri.app.demo.adapter.TextContentAdapter;
+import com.geri.app.demo.application.MyHyphenate;
+import com.geri.app.demo.utils.MLConstants;
+import com.geri.app.demo.utils.MLNotifier;
+import com.geri.app.demo.utils.MLRecorder;
+import com.geri.app.demo.utils.MorePopWindow;
 import com.geri.app.ui.R;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
@@ -75,6 +76,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private TextView tv_username;
     private ImageView tv_groupMore;
     private EMGroup group;
+    private TextView tv_more;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,15 +106,19 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         call = (LinearLayout) findViewById(R.id.call);
         chat_back = (TextView) findViewById(R.id.chat_back);
         Button bt_send = (Button) findViewById(R.id.bt_send);
-//        TextView addBlock = (TextView) findViewById(R.id.addBlock);
+        tv_more = (TextView) findViewById(R.id.tv_more);
 //        TextView deleteBlock = (TextView) findViewById(R.id.deleteBlock);
         if(conversation.getType().equals(EMConversation.EMConversationType.GroupChat)){
+            tv_groupMore.setVisibility(View.VISIBLE);
+            tv_more.setVisibility(View.GONE);
             group = EMClient.getInstance().groupManager().getGroup(conversation.conversationId());
             if(conversation.isGroup() && group != null){
                 tv_username.setText(group.getGroupName());
             }
         }else{
             tv_username.setText(userName);
+            tv_more.setVisibility(View.VISIBLE);
+            tv_groupMore.setVisibility(View.GONE);
         }
 
         if(mConversationType.equals(EMConversation.EMConversationType.Chat)){
@@ -128,9 +134,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         biaoqing.setOnClickListener(this);
         tupian.setOnClickListener(this);
         weizhi.setOnClickListener(this);
-//        call.setOnClickListener(this);
         chat_back.setOnClickListener(this);
-//        addBlock.setOnClickListener(this);
+        tv_more.setOnClickListener(this);
 //        deleteBlock.setOnClickListener(this);
 
         adapter = new TextContentAdapter(this, chatId);
@@ -220,13 +225,15 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                     startActivity(intent1);
                 }else{
                     Toast.makeText(this, "不是群组，不能跳转", Toast.LENGTH_SHORT).show();
+
                 }
 
                 break;
-//            //添加联系人到黑名单
-//            case R.id.addBlock:
-//                addBlockUser();
-//                break;
+            //更多
+            case R.id.tv_more:
+                MorePopWindow popWindow = new MorePopWindow(ChatActivity.this);
+                popWindow.showPopupWindow(tv_more);
+                break;
 //
 //            //从黑名单移除联系人
 //            case R.id.deleteBlock:

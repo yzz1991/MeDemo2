@@ -15,7 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.geri.app.demo.MLConstants;
+import com.geri.app.demo.utils.MLConstants;
 import com.geri.app.ui.R;
 import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
@@ -210,6 +210,7 @@ public class TextContentAdapter extends BaseAdapter {
         }
         //设置资源
         switch (type){
+            //文字消息
             case MLConstants.MSG_TYPE_TEXT_SEND:
             case MLConstants.MSG_TYPE_TEXT_RECEIVED:
                 EMTextMessageBody body = (EMTextMessageBody) message.getBody();
@@ -229,7 +230,7 @@ public class TextContentAdapter extends BaseAdapter {
                     }
                 }
                 break;
-
+            //图片消息
             case MLConstants.MSG_TYPE_IMAGE_SEND:
             case MLConstants.MSG_TYPE_IMAGE_RECEIVED:
                 // 获取图片消息体
@@ -272,20 +273,21 @@ public class TextContentAdapter extends BaseAdapter {
                             mediaPlayer.start();
                         }
                     });
-                }else{
-                    if(message.getChatType() == EMMessage.ChatType.Chat){
-                        holder3.voice_tv_nickName.setVisibility(View.GONE);
-                    }else{
-                        holder3.voice_tv_nickName.setVisibility(View.VISIBLE);
-                        holder3.voice_tv_nickName.setText(message.getFrom());
-                    }
-                    holder3.voice_content_received.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            mediaPlayer.start();
-                        }
-                    });
                 }
+//                else{
+//                    if(message.getChatType() == EMMessage.ChatType.Chat){
+//                        holder3.voice_tv_nickName.setVisibility(View.GONE);
+//                    }else{
+//                        holder3.voice_tv_nickName.setVisibility(View.VISIBLE);
+//                        holder3.voice_tv_nickName.setText(message.getFrom());
+//                    }
+//                    holder3.voice_content_received.setOnClickListener(new View.OnClickListener() {
+//                        @Override
+//                        public void onClick(View v) {
+//                            mediaPlayer.start();
+//                        }
+//                    });
+//                }
                 break;
 
             // 位置的消息

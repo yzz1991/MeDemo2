@@ -1,4 +1,4 @@
-package com.geri.app.demo;
+package com.geri.app.demo.application;
 
 import android.content.Context;
 import android.support.multidex.MultiDexApplication;
