@@ -87,11 +87,33 @@ public class ConversationFragment extends Fragment{
         }
     }
 
-    //刷新
-    @Override
-    public void onStart() {
-        super.onStart();
-        loadConversationList();
-        adapter.notifyDataSetChanged();
+    /**
+     * 刷新会话列表，重新加载会话列表到list集合，然后刷新adapter
+     */
+    public void refreshConversation() {
+        if (adapter != null) {
+            list.clear();
+            loadConversationList();
+            adapter.refreshList();
+        }
     }
+
+    @Override
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(!hidden){
+            // 刷新会话界面
+            refreshConversation();
+        }
+    }
+
+    //    /**
+//     * 重写父类的onResume方法
+//     */
+//    @Override
+//    public void onResume() {
+//        super.onResume();
+//        // 刷新会话界面
+//        refreshConversation();
+//    }
 }

@@ -1,8 +1,10 @@
 package com.geri.app.demo.ui;
 
+import android.app.ProgressDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -12,6 +14,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.ContextMenu;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -21,15 +24,17 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.geri.app.demo.adapter.TextContentAdapter;
 import com.geri.app.demo.application.MyHyphenate;
+import com.geri.app.demo.ui.call.VoiceCallActivity;
 import com.geri.app.demo.utils.MLConstants;
+import com.geri.app.demo.utils.MLMessageUtils;
 import com.geri.app.demo.utils.MLNotifier;
 import com.geri.app.demo.utils.MLRecorder;
-import com.geri.app.demo.utils.MorePopWindow;
 import com.geri.app.ui.R;
 import com.hyphenate.EMCallBack;
 import com.hyphenate.EMMessageListener;
@@ -37,6 +42,7 @@ import com.hyphenate.chat.EMClient;
 import com.hyphenate.chat.EMConversation;
 import com.hyphenate.chat.EMGroup;
 import com.hyphenate.chat.EMMessage;
+import com.hyphenate.exceptions.HyphenateException;
 
 import java.io.File;
 import java.util.List;
@@ -77,6 +83,9 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     private ImageView tv_groupMore;
     private EMGroup group;
     private TextView tv_more;
+    private PopupWindow mPopWindow;
+    // 进度对话框
+    private ProgressDialog progressDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -146,30 +155,6 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v,
-                                    ContextMenu.ContextMenuInfo menuInfo) {
-        super.onCreateContextMenu(menu, v, menuInfo);
-        menu.add(0, 0, Menu.NONE, "删除");
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item) {
-        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
-                .getMenuInfo();
-        switch (item.getItemId()) {
-            case 0:
-                List<EMMessage> allMessages = conversation.getAllMessages();
-                conversation.removeMessage(allMessages.get(menuInfo.position).getMsgId());
-                adapter.refresh();
-                adapter.notifyDataSetChanged();
-                break;
-            default:
-                return super.onContextItemSelected(item);
-        }
-        return true;
-    }
-
-    @Override
     public void onClick(View v) {
 
         switch (v.getId()) {
@@ -213,8 +198,8 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             //退回会话页面
             case R.id.chat_back:
-//                Intent intent2 = new Intent(ChatActivity.this, ConversationActivity.class);
-//                startActivity(intent2);
+                Intent intent2 = new Intent(ChatActivity.this, MainActivity.class);
+                startActivity(intent2);
                 finish();
                 break;
 
@@ -231,14 +216,102 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
                 break;
             //更多
             case R.id.tv_more:
-                MorePopWindow popWindow = new MorePopWindow(ChatActivity.this);
-                popWindow.showPopupWindow(tv_more);
+                addPopupWindow();
+                break;
+            //清空聊天记录
+            case R.id.clearAllContext:
+                clearAllContext();
+                adapter.refresh();
+                adapter.notifyDataSetChanged();
+                mPopWindow.dismiss();
+                break;
+            //加入黑名单
+            case R.id.addBlock:
+                addBlockUser();
+                mPopWindow.dismiss();
                 break;
 //
 //            //从黑名单移除联系人
 //            case R.id.deleteBlock:
 //                deleteBlockUser();
 //                break;
+        }
+    }
+
+    @Override
+    public void onCreateContextMenu(ContextMenu menu, View v,
+                                    ContextMenu.ContextMenuInfo menuInfo) {
+        super.onCreateContextMenu(menu, v, menuInfo);
+        menu.add(0, 0, Menu.NONE, "删除消息");
+        menu.add(0, 0, Menu.NONE, "撤回");
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item) {
+        AdapterView.AdapterContextMenuInfo menuInfo = (AdapterView.AdapterContextMenuInfo) item
+                .getMenuInfo();
+        List<EMMessage> allMessages = conversation.getAllMessages();
+        switch (item.getItemId()) {
+            //删除消息
+            case 0:
+                conversation.removeMessage(allMessages.get(menuInfo.position).getMsgId());
+                adapter.refresh();
+                adapter.notifyDataSetChanged();
+                break;
+            //撤回消息
+            case 1:
+                recallMessage(allMessages.get(menuInfo.position));
+                break;
+            default:
+                return super.onContextItemSelected(item);
+        }
+        return true;
+    }
+
+    //头部更多功能弹出框
+    private void addPopupWindow() {
+        LayoutInflater inflater = LayoutInflater.from(this);
+        View contentView = inflater.inflate(R.layout.popu_char_more, null);
+        int h = this.getWindowManager().getDefaultDisplay().getHeight();
+        int w = this.getWindowManager().getDefaultDisplay().getWidth();
+        mPopWindow = new PopupWindow(contentView);
+        // 设置SelectPicPopupWindow的View
+        mPopWindow.setContentView(contentView);
+        // 设置SelectPicPopupWindow弹出窗体的宽
+        mPopWindow.setWidth(w / 3 );
+        // 设置SelectPicPopupWindow弹出窗体的高
+        mPopWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+        // 设置SelectPicPopupWindow弹出窗体可点击
+        mPopWindow.setFocusable(true);
+        mPopWindow.setOutsideTouchable(true);
+        // 刷新状态
+        mPopWindow.update();
+        // 实例化一个ColorDrawable颜色为半透明
+        ColorDrawable dw = new ColorDrawable(0000000000);
+        // 点back键和其他地方使其消失,设置了这个才能触发OnDismisslistener ，设置其他控件变化等操作
+        mPopWindow.setBackgroundDrawable(dw);
+        // 设置SelectPicPopupWindow弹出窗体动画效果
+        mPopWindow.setAnimationStyle(R.style.AnimationPreview);
+        LinearLayout addTaskLayout = (LinearLayout) contentView
+                .findViewById(R.id.clearAllContext);
+        LinearLayout teamMemberLayout = (LinearLayout) contentView
+                .findViewById(R.id.addBlock);
+        addTaskLayout.setOnClickListener(this);
+        teamMemberLayout.setOnClickListener(this);
+        showPopupWindow(tv_more);
+    }
+
+    /**
+     * 显示popupWindow
+     *
+     * @param parent
+     */
+    public void showPopupWindow(View parent) {
+        if (!mPopWindow.isShowing()) {
+            // 以下拉方式显示popupwindow
+            mPopWindow.showAsDropDown(parent, parent.getLayoutParams().width / 2, 18);
+        } else {
+            mPopWindow.dismiss();
         }
     }
 
@@ -255,7 +328,7 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 //        switch (item.getItemId()) {
 //            case 0:
 //                if(mConversationType.equals(EMConversation.EMConversationType.Chat)){
-//                    Intent intent = new Intent(ChatActivity.this, VoiceCallActivity.class);
+                    Intent intent = new Intent(ChatActivity.this, VoiceCallActivity.class);
 //                    intent.putExtra("username", userName);
 //                    intent.putExtra("isComingCall", false);
 //                    startActivity(intent);
@@ -274,6 +347,53 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
 //        }
 //        return true;
 //    }
+
+    /**
+     * 撤回消息，将已经发送成功的消息进行撤回
+     *
+     * @param message 需要撤回的消息
+     */
+    private void recallMessage(final EMMessage message) {
+        // 显示撤回消息操作的 dialog
+        progressDialog = new ProgressDialog(this);
+        progressDialog.setMessage("正在撤回 请稍候……");
+        progressDialog.show();
+        MLMessageUtils.sendRecallMessage(message, new EMCallBack() {
+            @Override public void onSuccess() {
+                // 关闭进度对话框
+                progressDialog.dismiss();
+                // 设置扩展为撤回消息类型，是为了区分消息的显示
+                message.setAttribute(MLConstants.ML_ATTR_RECALL, true);
+                // 更新消息
+                EMClient.getInstance().chatManager().updateMessage(message);
+                adapter.refresh();
+                adapter.notifyDataSetChanged();
+            }
+
+            /**
+             * 撤回消息失败
+             * @param i 失败的错误码
+             * @param s 失败的错误信息
+             */
+            @Override public void onError(final int i, final String s) {
+                progressDialog.dismiss();
+                runOnUiThread(new Runnable() {
+                    @Override public void run() {
+                        // 弹出错误提示
+                        if (s.equals(MLConstants.ML_ERROR_S_RECALL_TIME)) {
+                            Toast.makeText(ChatActivity.this, "消息已经超过五分钟，不能撤回", Toast.LENGTH_SHORT).show();
+                        } else {
+                            Toast.makeText(ChatActivity.this, "撤回失败"+i + "-" + s, Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+
+            @Override public void onProgress(int i, String s) {
+
+            }
+        });
+    }
 
     /**
      * 发送文本消息
@@ -522,24 +642,22 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         recordTime = 0;
     }
 
-//    //联系人加入黑名单
-//    public void addBlockUser(){
-//        try {
-//            EMClient.getInstance().contactManager().addUserToBlackList(userName,false);
-//            Toast.makeText(this, "加入黑名单成功", Toast.LENGTH_SHORT).show();
-//        } catch (HyphenateException e) {
-//            e.printStackTrace();
-//        }
-//    }
-//    //从黑名单移除联系人
-//    private void deleteBlockUser() {
-//        try {
-//            EMClient.getInstance().contactManager().removeUserFromBlackList(userName);
-//            Toast.makeText(this, "移除成功", Toast.LENGTH_SHORT).show();
-//        } catch (HyphenateException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    //清空聊天记录
+    public void clearAllContext(){
+        EMConversation conversation = EMClient.getInstance().chatManager().getConversation(id);
+        conversation.clearAllMessages();
+        Toast.makeText(this, "聊天记录已清空", Toast.LENGTH_SHORT).show();
+    }
+
+    //联系人加入黑名单
+    public void addBlockUser(){
+        try {
+            EMClient.getInstance().contactManager().addUserToBlackList(userName,false);
+            Toast.makeText(this, "加入黑名单成功", Toast.LENGTH_SHORT).show();
+        } catch (HyphenateException e) {
+            e.printStackTrace();
+        }
+    }
 
     @Override
     protected void onStart() {
@@ -623,6 +741,47 @@ public class ChatActivity extends AppCompatActivity implements View.OnClickListe
         };
 
     }
+
+//    //listview的长按弹出
+//    private void listViewItemPopupWindow() {
+//        LayoutInflater inflater = LayoutInflater.from(this);
+//        View contentView = inflater.inflate(R.layout.listview_item_listener_pop, null);
+//        int h = this.getWindowManager().getDefaultDisplay().getHeight();
+//        int w = this.getWindowManager().getDefaultDisplay().getWidth();
+//        mPopWindow = new PopupWindow(contentView);
+//        // 设置SelectPicPopupWindow的View
+//        mPopWindow.setContentView(contentView);
+//        // 设置SelectPicPopupWindow弹出窗体的宽
+//        mPopWindow.setWidth(LinearLayout.LayoutParams.MATCH_PARENT);
+//        // 设置SelectPicPopupWindow弹出窗体的高
+//        mPopWindow.setHeight(LinearLayout.LayoutParams.WRAP_CONTENT);
+//        // 设置SelectPicPopupWindow弹出窗体可点击
+//        mPopWindow.setFocusable(true);
+//        mPopWindow.setOutsideTouchable(true);
+//        // 刷新状态
+//        mPopWindow.update();
+//        // 实例化一个ColorDrawable颜色为半透明
+//        ColorDrawable dw = new ColorDrawable(0000000000);
+//        // 点back键和其他地方使其消失,设置了这个才能触发OnDismisslistener ，设置其他控件变化等操作
+//        mPopWindow.setBackgroundDrawable(dw);
+//        // 设置SelectPicPopupWindow弹出窗体动画效果
+//        mPopWindow.setAnimationStyle(R.style.AnimationPreview);
+//        LinearLayout addTaskLayout = (LinearLayout) contentView
+//                .findViewById(R.id.clearAllContext);
+//        LinearLayout teamMemberLayout = (LinearLayout) contentView
+//                .findViewById(R.id.addBlock);
+//        addTaskLayout.setOnClickListener(this);
+//        teamMemberLayout.setOnClickListener(this);
+//        showListViewPopupWindow(call);
+//    }
+//    public void showListViewPopupWindow(View parent) {
+//        if (!mPopWindow.isShowing()) {
+//            // 以下拉方式显示popupwindow
+//            mPopWindow.showAsDropDown(parent, parent.getLayoutParams().width / 2, 18);
+//        } else {
+//            mPopWindow.dismiss();
+//        }
+//    }
 
 
 

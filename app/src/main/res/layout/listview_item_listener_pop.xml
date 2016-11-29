@@ -14,7 +14,7 @@
         android:background="#f2f2f2">
 
         <LinearLayout
-            android:id="@+id/clearAllContext"
+            android:id="@+id/deleteContext"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -24,7 +24,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:gravity="center"
-                android:text="清空聊天记录"
+                android:text="删除消息"
                 android:textSize="15dip" />
         </LinearLayout>
 
@@ -34,7 +34,7 @@
             android:background="#999"/>
 
         <LinearLayout
-            android:id="@+id/addBlock"
+            android:id="@+id/withDraw"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:orientation="horizontal"
@@ -44,7 +44,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="fill_parent"
                 android:gravity="center"
-                android:text="加入黑名单"
+                android:text="撤回"
                 android:textSize="15dip" />
         </LinearLayout>
 

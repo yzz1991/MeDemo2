@@ -82,6 +82,15 @@ public class TextContentAdapter extends BaseAdapter {
     public int getItemViewType(int position) {
         EMMessage message = mMessages.get(position);
         int itemType = -1;
+        // 判断消息类型
+        if (message.getBooleanAttribute(MLConstants.ML_ATTR_RECALL, false)) {
+            // 撤回消息
+            itemType = MLConstants.MSG_TYPE_SYS_RECALL;
+        } else if (message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VIDEO, false)
+                || message.getBooleanAttribute(MLConstants.ML_ATTR_CALL_VOICE, false)) {
+            // 音视频消息
+            itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_CALL_SEND : MLConstants.MSG_TYPE_CALL_RECEIVED;
+        }else {
             switch (message.getType()) {
                 case TXT:
                     // 文本消息
@@ -104,6 +113,7 @@ public class TextContentAdapter extends BaseAdapter {
                     itemType = message.direct() == EMMessage.Direct.SEND ? MLConstants.MSG_TYPE_TEXT_SEND : MLConstants.MSG_TYPE_TEXT_RECEIVED;
                     break;
 
+            }
         }
         return itemType;
     }
@@ -120,6 +130,7 @@ public class TextContentAdapter extends BaseAdapter {
         ViewHolder2 holder2 = null;
         ViewHolder3 holder3 = null;
         ViewHolder4 holder4 = null;
+        ViewHolder5 holder5 = null;
         int type = getItemViewType(position);
         if (convertView == null) {
             switch (type) {
@@ -182,6 +193,14 @@ public class TextContentAdapter extends BaseAdapter {
                     holder4.location_content_received = (TextView) convertView.findViewById(R.id.location_content_received);
                     convertView.setTag(holder4);
                     break;
+
+                case MLConstants.MSG_TYPE_SYS_RECALL:
+                    convertView = mLayoutinflater.inflate(R.layout.msg_recall,null);
+                    holder5 = new ViewHolder5();
+                    holder5.text_content = (TextView) convertView.findViewById(R.id.text_content);
+                    holder5.text_time = (TextView) convertView.findViewById(R.id.text_time);
+                    convertView.setTag(holder5);
+                    break;
             }
         } else {
             switch (type) {
@@ -205,6 +224,10 @@ public class TextContentAdapter extends BaseAdapter {
                 case MLConstants.MSG_TYPE_LOCATION_SEND:
                 case MLConstants.MSG_TYPE_LOCATION_RECEIVED:
                     holder4 = (ViewHolder4) convertView.getTag();
+                    break;
+
+                case MLConstants.MSG_TYPE_SYS_RECALL:
+                    holder5 = (ViewHolder5) convertView.getTag();
                     break;
             }
         }
@@ -273,21 +296,20 @@ public class TextContentAdapter extends BaseAdapter {
                             mediaPlayer.start();
                         }
                     });
+                } else{
+                    if(message.getChatType() == EMMessage.ChatType.Chat){
+                        holder3.voice_tv_nickName.setVisibility(View.GONE);
+                    }else{
+                        holder3.voice_tv_nickName.setVisibility(View.VISIBLE);
+                        holder3.voice_tv_nickName.setText(message.getFrom());
+                    }
+                    holder3.voice_content_received.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            mediaPlayer.start();
+                        }
+                    });
                 }
-//                else{
-//                    if(message.getChatType() == EMMessage.ChatType.Chat){
-//                        holder3.voice_tv_nickName.setVisibility(View.GONE);
-//                    }else{
-//                        holder3.voice_tv_nickName.setVisibility(View.VISIBLE);
-//                        holder3.voice_tv_nickName.setText(message.getFrom());
-//                    }
-//                    holder3.voice_content_received.setOnClickListener(new View.OnClickListener() {
-//                        @Override
-//                        public void onClick(View v) {
-//                            mediaPlayer.start();
-//                        }
-//                    });
-//                }
                 break;
 
             // 位置的消息
@@ -307,6 +329,16 @@ public class TextContentAdapter extends BaseAdapter {
                     }
                     holder4.location_content_received.setText(address);
                 }
+                break;
+            case MLConstants.MSG_TYPE_SYS_RECALL:
+                // 设置显示内容
+                String messageContext="";
+                if( message.direct() == EMMessage.Direct.SEND){
+                    messageContext = "此条消息已撤回";
+                }else{
+                    messageContext = String.format("此条消息已被 %1$s 撤回", message.getUserName());
+                }
+                holder4.location_content_received.setText(messageContext);
                 break;
         }
         return convertView;
@@ -331,6 +363,10 @@ public class TextContentAdapter extends BaseAdapter {
         TextView  location_tv_nickName;
         TextView location_content_received;
         TextView location_content_send;
+    }
+    class ViewHolder5{
+        TextView text_content;
+        TextView text_time;
     }
 
 }

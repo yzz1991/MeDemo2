@@ -63,9 +63,8 @@ public class MainActivity extends FragmentActivity {
         rbConversation = (RadioButton) findViewById(R.id.rb_conversation);
         rbContacts = (RadioButton) findViewById(R.id.rb_contacts);
         rbSetting = (RadioButton) findViewById(R.id.rb_setting);
-
         homeVp.setAdapter(new HomeViewPagerAdapter(getSupportFragmentManager()));
-        homeVp.setCurrentItem(0);
+//        homeVp.setCurrentItem(0);
         rg.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup group, int checkedId) {

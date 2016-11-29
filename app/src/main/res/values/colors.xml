@@ -11,6 +11,10 @@
     <color name="banner_text_normal">#707070</color>
     <color name="banner_text_press">#6495ED</color>
 
+    <color name="ml_black_38">#61212121</color>
+    <color name="ml_white_87">#ddffffff</color>
+    <color name="ml_white_54">#89ffffff</color>
+
 
 
 </resources>

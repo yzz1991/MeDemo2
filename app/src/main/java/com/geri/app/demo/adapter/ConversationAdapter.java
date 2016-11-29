@@ -1,6 +1,8 @@
 package com.geri.app.demo.adapter;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,11 +30,15 @@ public class ConversationAdapter extends BaseAdapter {
     private List<EMConversation> list;
     private LayoutInflater mInflater;
     private String content;
+    // 刷新会话列表
+    private final int HANDLER_CONVERSATION_REFRESH = 0;
+    private MyHandler mHandler;
 
     public ConversationAdapter(List<EMConversation> list, Context mContext) {
         this.list = list;
         this.mContext = mContext;
         mInflater = LayoutInflater.from(mContext);
+        mHandler = new MyHandler();
     }
 
     @Override
@@ -98,6 +104,34 @@ public class ConversationAdapter extends BaseAdapter {
     class ViewHolder{
         TextView tvUserName;
         TextView tvContent;
+    }
+
+    /**
+     * 供界面调用的刷新 Adapter 的方法
+     */
+    public void refreshList() {
+        Message msg = mHandler.obtainMessage();
+        msg.what = HANDLER_CONVERSATION_REFRESH;
+        mHandler.sendMessage(msg);
+    }
+
+    /**
+     * 自定义Handler，用来处理消息的刷新等
+     */
+    protected class MyHandler extends Handler {
+        private void refresh() {
+            notifyDataSetChanged();
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            //            super.handleMessage(msg);
+            switch (msg.what) {
+                case HANDLER_CONVERSATION_REFRESH:
+                    refresh();
+                    break;
+            }
+        }
     }
 
 }
